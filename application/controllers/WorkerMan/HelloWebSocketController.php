@@ -27,10 +27,12 @@ class HelloWebSocketController extends CI_Controller
             /** @var $connection TcpConnection */
             $connection->urlGetData = $_GET;
         };
+
         $this->worker->onMessage = function ($connection,$data) {
             /** @var $connection TcpConnection */
             $connection->send('hello ' . $data);
         };
+
         $this->worker::runAll();
     }
 }

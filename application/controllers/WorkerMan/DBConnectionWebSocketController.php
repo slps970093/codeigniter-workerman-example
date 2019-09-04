@@ -2,6 +2,8 @@
 
 use Workerman\Connection\TcpConnection;
 use Workerman\Worker;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
 
 class DBConnectionWebSocketController extends CI_Controller
 {
@@ -44,6 +46,11 @@ class DBConnectionWebSocketController extends CI_Controller
                 $ci->load->database();
             }
 
+            $monolog = new Logger('socket-log');
+
+            $monolog->pushHandler(new StreamHandler(APPPATH . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . "ws-" . date('Y-m-d'). ".log"));
+
+            $monolog->info($data);
             $clientSocketData = json_decode($data,true);
 
             if (strcmp($clientSocketData['action'],'product_info') == 0) {

@@ -1,6 +1,10 @@
 {
     "require": {
         "codeigniter/framework": "^3.1",
-        "workerman/workerman": "^3.5"
+        "workerman/workerman": "^3.5",
+        "monolog/monolog": "^2.0",
+        "workerman/phpsocket.io": "^1.1",
+        "firebase/php-jwt": "^5.0",
+        "nesbot/carbon": "1.39"
     }
 }
