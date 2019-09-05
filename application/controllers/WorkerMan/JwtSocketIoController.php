@@ -61,13 +61,11 @@ class JwtSocketIoController extends CI_Controller
 
         $socketio->on('onConnect',function($connection) {
             /** @var TcpConnection $connection  */
-
             $controller = & get_instance();
-
             $connection->httpClientData = [
-                'get' => $connection->input->get(),
-                'post' => $connection->input->post(),
-                'header' => $connection->input->request_headers(true)
+                'get' => $controller->input->get(),
+                'post' => $controller->input->post(),
+                'header' => $controller->input->request_headers(true)
             ];
         });
 
@@ -76,24 +74,22 @@ class JwtSocketIoController extends CI_Controller
         $socketio->on('connection',function ($socket) use ($socketIoOwmer) {
             /** @var Socket $socket*/
             /** @var SocketIO $socketIoOwmer */
-
-            $socket->on('jwt', function ($messaage) use ($socketIoOwmer) {
-
-                echo "client :" . $messaage . "\n";
-
-
-                $clientMessage = json_decode(trim($messaage),true);
-
-                $controller =& get_instance();
-                $controller->jwtKey;
-                $arr = JWT::decode($clientMessage['token'],$controller->jwtKey,['HS256']);
-                $socketIoOwmer->emit("systemMessage","Hello world member : ". $arr->member_id);
+            $socket->on('jwt', function ($message) use ($socketIoOwmer) {
+                if (!empty($message)) {
+                    var_dump($message);
+                    echo "\n";
+                    if (!is_array($message)) {
+                        $clientMessage = json_decode(trim($message),true);
+                    } else {
+                        $clientMessage = $message;
+                    }
+                    $controller =& get_instance();
+                    $controller->jwtKey;
+                    $arr = JWT::decode($clientMessage['token'],$controller->jwtKey,['HS256']);
+                    $socketIoOwmer->emit("systemMessage","Hello world member : ". $arr->member_id);
+                }
             });
-
-            echo "";
         });
-
-
         Worker::runAll();
     }
 
